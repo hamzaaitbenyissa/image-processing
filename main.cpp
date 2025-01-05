@@ -12,7 +12,7 @@ int h;
 int r;
 }dms;
 //---------------------------creation---------------------------------------------------
-imgT creerImg(dms d){
+imgT createImage(dms d){
 	imgT img;
 	long C=d.lg*d.r;//nbre de colonne
 	long L=d.h*d.r;//nobre de ligne
@@ -137,8 +137,8 @@ void Miroir_H(imgT mir/*destination*/,imgT img/*source*/,dms d){
 
 void Miroir_V(imgT mir/*destination*/,imgT img/*source*/,dms d){
 	dms dt={d.h,d.lg,d.r};
-	imgT img_temp1=creerImg(dt);
-	imgT img_temp2=creerImg(dt);
+	imgT img_temp1=createImage(dt);
+	imgT img_temp2=createImage(dt);
 	img_transpose(img_temp2,img,dt);
 	Miroir_H(img_temp1,img_temp2,dt);
 	img_transpose(mir,img_temp1,d);
@@ -222,7 +222,7 @@ echanger(M,i,j,ligne_min(M,d,i,j),colonne_min(M,d,i,j));
 //------------------------------------coleur dominante-------------------------------
 // savoir nombre des differents coleurs d'une image
 int distinct(imgT M,dms d){
-imgT MC=creerImg(d);
+imgT MC=createImage(d);
 copier(MC,M,d);
 int L=d.h*d.r,C=d.lg*d.r;
 trier(MC,d);int s=1,i,j;
@@ -238,7 +238,7 @@ return s;
 ptrPixelT coleurs(imgT img,dms d){
 int L=d.h*d.r,C=d.lg*d.r;
 ptrPixelT clr=(ptrPixelT)malloc(sizeof(pixelT)*distinct(img,d));
-imgT MC=creerImg(d);
+imgT MC=createImage(d);
 copier(MC,img,d);
 trier(MC,d);int s=1,i,j;
 clr[0]=MC[0][0];
@@ -324,7 +324,7 @@ do{
             case 1: 
                     saisir(&lg,&h,&r);
 	                d.lg=lg;d.h=h;d.r=r;
-	                img=creerImg(d);
+	                img=createImage(d);
 	                initImg(img,d);
 	                k++;
 	            printf("\n\n\t Operation completed successfully.  \n\n");
@@ -344,7 +344,7 @@ do{
 					break;
 		    case 4:	
                    if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
-				  img_negatif=creerImg(d);
+				  img_negatif=createImage(d);
                   Negatif(img_negatif,img,d);
 			      afficher(img_negatif,d); 
                   printf("\n\n\t Operation completed successfully.  \n\n");
@@ -357,7 +357,7 @@ do{
 			      printf("\n\tX :  ");  scanf("%d",&crd.x);
 			      printf("\n\tY :  ");  scanf("%d",&crd.y);
                   printf("\nNew pixel  :  "); scanf("%u",&cn);printf("\n\n");
-                  img_remplissage=creerImg(d);
+                  img_remplissage=createImage(d);
 				  remplir(img_remplissage,img,d,crd,cn);
 				 // remplir(img_remplissage,img,d,crd,0);
                   afficher(img_remplissage,d);
@@ -366,7 +366,7 @@ do{
 					break;
 			case 6:	
 			if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
-                img_miroir_H=creerImg(d);
+                img_miroir_H=createImage(d);
                 Miroir_H(img_miroir_H,img,d);
 				afficher(img_miroir_H,d); 
                   printf("\n\n\t Operation completed successfully.  \n\n");
@@ -374,7 +374,7 @@ do{
                   break;
 			case 7:
 				if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
-				img_miroir_V=creerImg(d);
+				img_miroir_V=createImage(d);
                 Miroir_V(img_miroir_V,img,d);
 				afficher(img_miroir_V,d); 
                   printf("\n\n\t Operation completed successfully.  \n\n");
