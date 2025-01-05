@@ -282,19 +282,19 @@ void Negatif(imgT neg/*destination*/,imgT img/*source*/,dms d){
 
 
 // Displays the menu of options
-void Menu(){
-printf("*******************AIT BEN YISSA HAMZA************************\n\n");
-printf("* 1---->    Create image                                 *\n");
-printf("* 2---->    Show image                                   *\n");
-printf("* 3---->    Frequencies                                  *\n");
-printf("* 4---->    Negative                                     *\n");
-printf("* 5---->    Fill                                         *\n");
-printf("* 6---->    Horizontal Mirror                            *\n");
-printf("* 7---->    Vertical Mirror                              *\n");
-printf("* 8---->    Clear screen                                 *\n");
-printf("* 9---->    Menu                                         *\n");
-printf("*10---->    Quit                                         *\n");
-printf("********************ENSET GLSID S1****************************\n\n");
+void Menu() {
+    printf("*******************AIT BEN YISSA HAMZA*******************\n\n");
+    printf("*  1 ----> Create image                                 *\n");
+    printf("*  2 ----> Show image                                   *\n");
+    printf("*  3 ----> Frequencies                                  *\n");
+    printf("*  4 ----> Negative                                     *\n");
+    printf("*  5 ----> Fill                                         *\n");
+    printf("*  6 ----> Horizontal Mirror                            *\n");
+    printf("*  7 ----> Vertical Mirror                              *\n");
+    printf("*  8 ----> Clear screen                                 *\n");
+    printf("*  9 ----> Menu                                         *\n");
+    printf("* 10 ----> Quit                                         *\n");
+    printf("********************************************************\n\n");
 }
 
 // Gets the user's menu choice
