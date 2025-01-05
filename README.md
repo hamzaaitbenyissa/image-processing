@@ -35,4 +35,5 @@ The program offers the following functionalities:
 
 ## Screenshots
 
-![image](https://github.com/user-attachments/assets/ff8a88db-3bd0-4c49-a298-4afe4bf8a518)
+
+![image](https://github.com/user-attachments/assets/938f9def-97ac-49fe-bf51-1d9c2742c063)
