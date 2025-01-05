@@ -47,16 +47,29 @@ void initImg(imgT im, dms d)
 // displays image
 void afficher(imgT im, dms d)
 {
-	int L = d.h * d.r, C = d.lg * d.r;
-	printf("Image{\n\tLength:%d\n\tHeight:%d\n\tPixelList:[\n", d.lg, d.h);
-	for (int i = 0; i < L; i++)
-	{
-		printf("\t\t");
-		for (int j = 0; j < C; j++)
-			printf("%4u  ", im[i][j]);
-		printf("\n\n");
-	}
-	printf("]}\n");
+    int L = d.h * d.r, C = d.lg * d.r;
+
+    // Print top border
+    printf("  +");
+    for (int j = 0; j < C; j++) {
+        printf("-----");
+    }
+    printf("+\n");
+
+    for (int i = 0; i < L; i++)
+    {
+        printf("  |");
+        for (int j = 0; j < C; j++)
+            printf(" %3u |", im[i][j]);
+        printf("\n");
+
+        // Print separator between rows
+        printf("  +");
+        for (int j = 0; j < C; j++) {
+            printf("-----");
+        }
+        printf("+\n");
+    }
 }
 
 // copies an image
