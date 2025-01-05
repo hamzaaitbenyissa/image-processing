@@ -72,23 +72,6 @@ void copyImage(imgT cop, imgT org, dms d)
 
 //--------------------------------------dynamic queue------------------------------
 
-// define a dynamic queue
-typedef struct
-{
-    int x, y;
-} coordt1;
-
-typedef struct coordT
-{
-    int x, y; // pixel coordinates
-    struct coordT *suivant;
-} coordt;
-
-typedef struct
-{
-    coordt *tete, *queue;
-} filet;
-
 // queue operations:
 
 void enqueue(filet *ptrF, coordt1 px)

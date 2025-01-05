@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "image_processing.h"
+#include <unistd.h>
 
 void Menu()
 {
