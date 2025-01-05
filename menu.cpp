@@ -20,110 +20,110 @@ void Menu()
 
 int menu()
 {
-    int c;
+    int choice;
     do
     {
         printf("Enter your choice :  ");
-        scanf("%d", &c);
+        scanf("%d", &choice);
         printf("\n\n");
-        if (c < 1 || c > 10)
+        if (choice < 1 || choice > 10)
         {
             printf("\tInvalid choice !\n\n");
             sleep(1);
         };
-    } while (c < 1 || c > 10);
-    return c;
+    } while (choice < 1 || choice > 10);
+    return choice;
 }
 
-void handleMenuChoice(int choice, Image &img, Dimensions &d, int &k)
+void handleMenuChoice(int menuChoice, Image &image, Dimensions &imageDimensions, int &imageCount)
 {
-    Coordinate crd;
-    int cn;
-    Image img_remplissage, img_miroir_V, img_miroir_H, img_negatif;
+    Coordinate coordinate;
+    int newPixelColor;
+    Image filledImage, mirroredVerticalImage, mirroredHorizontalImage, negativeImage;
 
-    switch (choice)
+    switch (menuChoice)
     {
     case 1:
-        getImageDimensions(&d.lg, &d.h, &d.r);
-        img = createImage(d);
-        initImg(img, d);
-        k++;
+        getImageDimensions(&imageDimensions.lg, &imageDimensions.h, &imageDimensions.r);
+        image = createImage(imageDimensions);
+        initImg(image, imageDimensions);
+        imageCount++;
         printf("\n\n\t Operation completed successfully.  \n\n");
         sleep(1);
         break;
     case 2:
-        if (k == 0)
+        if (imageCount == 0)
         {
             printf("\nPlease create an image first!\n\n");
             break;
         }
-        displayImage(img, d);
+        displayImage(image, imageDimensions);
         printf("\n\n\t Operation completed successfully.  \n\n");
         sleep(1);
         break;
     case 3:
-        if (k == 0)
+        if (imageCount == 0)
         {
             printf("\nPlease create an image first!\n\n");
             break;
         }
-        displayColorFrequencies(img, d);
+        displayColorFrequencies(image, imageDimensions);
         printf("\n\n");
         sleep(1);
         break;
     case 4:
-        if (k == 0)
+        if (imageCount == 0)
         {
             printf("\nPlease create an image first!\n\n");
             break;
         }
-        img_negatif = createImage(d);
-        applyNegativeFilter(img_negatif, img, d);
-        displayImage(img_negatif, d);
+        negativeImage = createImage(imageDimensions);
+        applyNegativeFilter(negativeImage, image, imageDimensions);
+        displayImage(negativeImage, imageDimensions);
         printf("\n\n\t Operation completed successfully.  \n\n");
         sleep(1);
         break;
     case 5:
-        if (k == 0)
+        if (imageCount == 0)
         {
             printf("\nPlease create an image first!\n\n");
             break;
         }
         printf("\nPlease enter the coordinates  :  \n\n");
         printf("\tX :  ");
-        scanf("%d", &crd.x);
+        scanf("%d", &coordinate.x);
         printf("\tY :  ");
-        scanf("%d", &crd.y);
+        scanf("%d", &coordinate.y);
         printf("New pixel  :  ");
-        scanf("%u", &cn);
+        scanf("%u", &newPixelColor);
         printf("\n\n");
-        img_remplissage = createImage(d);
-        fillImage(img_remplissage, img, d, crd, cn);
-        displayImage(img_remplissage, d);
+        filledImage = createImage(imageDimensions);
+        fillImage(filledImage, image, imageDimensions, coordinate, newPixelColor);
+        displayImage(filledImage, imageDimensions);
         printf("\n\n\t Operation completed successfully.  \n\n");
         sleep(1);
         break;
     case 6:
-        if (k == 0)
+        if (imageCount == 0)
         {
             printf("\nPlease create an image first!\n\n");
             break;
         }
-        img_miroir_H = createImage(d);
-        horizontalMirror(img_miroir_H, img, d);
-        displayImage(img_miroir_H, d);
+        mirroredHorizontalImage = createImage(imageDimensions);
+        horizontalMirror(mirroredHorizontalImage, image, imageDimensions);
+        displayImage(mirroredHorizontalImage, imageDimensions);
         printf("\n\n\t Operation completed successfully.  \n\n");
         sleep(1);
         break;
     case 7:
-        if (k == 0)
+        if (imageCount == 0)
         {
             printf("\nPlease create an image first!\n\n");
             break;
         }
-        img_miroir_V = createImage(d);
-        verticalMirror(img_miroir_V, img, d);
-        displayImage(img_miroir_V, d);
+        mirroredVerticalImage = createImage(imageDimensions);
+        verticalMirror(mirroredVerticalImage, image, imageDimensions);
+        displayImage(mirroredVerticalImage, imageDimensions);
         printf("\n\n\t Operation completed successfully.  \n\n");
         sleep(1);
         break;
