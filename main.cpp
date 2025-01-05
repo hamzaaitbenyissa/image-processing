@@ -311,7 +311,7 @@ return c;
 }
 
 // -------------------------------------------------application-----------------------------------
-main(){
+int main(){
 	int lg,h,r,a,k=0,choix;dms d;
 	coordt1 crd;
     int cn;
@@ -388,5 +388,5 @@ do{
 			    break;
 			}
 				}while (choix!=10);
-
+    return 0;
 }
