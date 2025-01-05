@@ -1,3 +1,39 @@
-## Traitement d'image avec langage c
-# run gcc main.cpp
-![menu](https://user-images.githubusercontent.com/85696348/164547369-31d7eadc-2a87-4108-92e1-f53eec7da464.png)
+# Image Processing in C
+
+This project implements basic image processing functionalities in C.
+
+## Compilation
+
+To compile the project, use the following command:
+
+```bash
+gcc main.cpp -o image_processor
+```
+
+## Execution
+
+To run the compiled program, use:
+
+```bash
+./image_processor
+```
+
+## Features
+
+The program offers the following functionalities:
+
+1.  **Create Image:** Allows the user to create a new image by specifying its dimensions (length, height, and resolution).
+2.  **Show Image:** Displays the pixel values of the created image.
+3.  **Frequencies:** Shows the frequency of each color in the image and identifies the dominant color.
+4.  **Negative:** Applies a negative filter to the image.
+5.  **Fill:** Fills a region of the image with a specified color, starting from a given coordinate.
+6.  **Horizontal Mirror:** Creates a horizontally mirrored version of the image.
+7.  **Vertical Mirror:** Creates a vertically mirrored version of the image.
+8.  **Clear Screen:** Clears the console screen.
+9.  **Menu:** Displays the menu options.
+10. **Quit:** Exits the program.
+
+## Screenshots
+
+![Menu](screenshoots/menu.png)
+![Show Matrix](screenshoots/show matrix.png)
