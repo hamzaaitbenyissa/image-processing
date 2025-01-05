@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 
-typedef unsigned char pixelT; //couleur
+typedef unsigned char pixelT; // pixel color
 typedef pixelT* ptrPixelT;
 typedef ptrPixelT* imgT;
 typedef struct {
@@ -11,17 +11,19 @@ int	lg;
 int h;
 int r;
 }dms;
-//---------------------------creation---------------------------------------------------
+
+// creates an image
 imgT createImage(dms d){
 	imgT img;
-	long C=d.lg*d.r;//nbre de colonne
-	long L=d.h*d.r;//nobre de ligne
+	long C=d.lg*d.r;//number of columns
+	long L=d.h*d.r;//number of lines
 	img=(imgT)malloc(L*sizeof(ptrPixelT));
 	for(int i=0;i<L;i++)
 	img[i]=(ptrPixelT)malloc(C*sizeof(pixelT));
 	return img;	
 }
-//pour saiser les donnees
+
+// gets image dimensions
 void saisir(int *ptrL,int *ptrH,int *ptrR){
 	printf("Length : ");
 	scanf("%d",ptrL);
@@ -30,14 +32,15 @@ void saisir(int *ptrL,int *ptrH,int *ptrR){
 	printf("Resolution : ");
 	scanf("%d",ptrR);
 }
-//initialization d'image par des pixels
 
+// initializes image pixels with random values
 void initImg(imgT im,dms d){
 		for(int i=0;i<d.r*d.h;i++)
 			for(int j=0;j<d.r*d.lg;j++)
 				 im[i][j]=rand()%256;
 }
-//affichage d'image
+
+// displays image
 void afficher(imgT im,dms d){
 	int L=d.h*d.r,C=d.lg*d.r;
 	printf("Image{\n\tLength:%d\n\tHeight:%d\n\tPixelList:[\n"
@@ -51,22 +54,23 @@ void afficher(imgT im,dms d){
 	printf("]}\n");
 }
 
-//faire une copie:
+// copies an image
 void copier(imgT cop,imgT org,dms d){
 int L=d.h*d.r,C=d.lg*d.r;
 for(int i=0;i<L;i++)
 for(int j=0;j<C;j++)
 cop[i][j]=org[i][j];		
 }
-//--------------------------------------une file dynamique------------------------------
 
-//definir une file dynamique
+//--------------------------------------dynamic queue------------------------------
+
+//define a dynamic queue
 typedef struct{
 	int x,y;
 }coordt1;
 
 typedef struct coordT {
-	int x,y;//coordonnees d'un pixel
+	int x,y;// pixel coordinates
 	struct coordT  *suivant;
 }coordt;
 
@@ -75,7 +79,7 @@ typedef struct{
 	coordt *tete,*queue;	
 }filet;
 
-//operations sur la file:
+// queue operations:
 
 void enfiler(filet *ptrF,coordt1 px){
 	coordt *p=(coordt *)malloc(sizeof(coordt));
@@ -94,7 +98,7 @@ int estVide(filet f){
 }	
 	
 coordt1 defiler(filet *ptrF){
- 	coordt1 c={-1,-1};//synonyme d'une file vide
+ 	coordt1 c={-1,-1};// empty queue
  	coordt *s;
  	if(ptrF->tete){
  		s=ptrF->tete;
@@ -109,11 +113,9 @@ coordt1 defiler(filet *ptrF){
  	return c;
  }
 
+//-------------------------------------image effects---------------------------------------------
 
-
-//-------------------------------------des effets---------------------------------------------
-
-//-----------------------------------transpose d'une matrice----------------------------------
+//-----------------------------------transpose an image----------------------------------
 void img_transpose(imgT imgtr/*destination*/,imgT img/*source*/,dms d){
 	for(int i=0;i<d.h*d.r;i++)
         for(int j=0;j<d.lg*d.r;j++)
@@ -121,7 +123,7 @@ void img_transpose(imgT imgtr/*destination*/,imgT img/*source*/,dms d){
 }
 
 
-//L'effet de miroir Horisontal
+//Horizontal mirror effect
 void Miroir_H(imgT mir/*destination*/,imgT img/*source*/,dms d){
     int L=d.h*d.r,C=d.lg*d.r;
 	int i,ii;
@@ -133,8 +135,7 @@ void Miroir_H(imgT mir/*destination*/,imgT img/*source*/,dms d){
 	}
 }
 
-//L'effet de miroir vertical
-
+//Vertical mirror effect
 void Miroir_V(imgT mir/*destination*/,imgT img/*source*/,dms d){
 	dms dt={d.h,d.lg,d.r};
 	imgT img_temp1=createImage(dt);
@@ -144,10 +145,10 @@ void Miroir_V(imgT mir/*destination*/,imgT img/*source*/,dms d){
 	img_transpose(mir,img_temp1,d);
 }
 
-//remplissage de l'image
+//fill the image
 void remplir(imgT im /*destination*/,imgT img/*source*/,dms d,coordt1 px,pixelT cn){
 	copier(im,img,d);
-	filet f={NULL,NULL};//file vide;
+	filet f={NULL,NULL};//empty queue;
 	coordt1 px2,px1;
 	enfiler(&f,px);
 	pixelT c0=im[px.x][px.y];
@@ -173,10 +174,8 @@ void remplir(imgT im /*destination*/,imgT img/*source*/,dms d,coordt1 px,pixelT 
 	}
 }
 
-
-
-//-----------------------------------trier une image----------------------------------
-//chercher le min d'un ligne
+//-----------------------------------sort an image----------------------------------
+//find the min of a line
 int ligne_min(imgT M,dms d,int i0,int j0){
 int L=d.h*d.r,C=d.lg*d.r;
 pixelT min=M[i0][j0];int i,j,indice=i0;
@@ -189,7 +188,7 @@ return indice;
 }
 
 
-//chercher le min d'un colonne
+//find the min of a column
 int colonne_min(imgT M,dms d,int i0,int j0){
 int L=d.h*d.r,C=d.lg*d.r;
 pixelT min=M[i0][j0];int i,j,indice=j0;
@@ -201,7 +200,7 @@ if(min>M[i][j]) {indice=j;min=M[i][j];}	}}
 return indice;
 }
 
-//Echanger deux pixelles
+//swap two pixels
 void echanger(imgT M,int i0 , int j0,int i1,int j1){
 pixelT aux;
 aux=M[i0][j0];	
@@ -209,7 +208,7 @@ M[i0][j0]=M[i1][j1];
 M[i1][j1]=aux;	
 }
 
-//algorithme de tri
+//sorting algorithm
 void trier(imgT M,dms d){
 int L=d.h*d.r,C=d.lg*d.r;
 int i,j;	
@@ -219,8 +218,8 @@ echanger(M,i,j,ligne_min(M,d,i,j),colonne_min(M,d,i,j));
 }
 
 
-//------------------------------------coleur dominante-------------------------------
-// savoir nombre des differents coleurs d'une image
+//------------------------------------dominant color-------------------------------
+// know the number of distinct colors in an image
 int distinct(imgT M,dms d){
 imgT MC=createImage(d);
 copier(MC,M,d);
@@ -234,7 +233,7 @@ if(i!=L-1 && MC[i][C-1]!=MC[i+1][0]) s++;
 return s;
 }
 
-//les coleurs d'une image
+//get the colors of an image
 ptrPixelT coleurs(imgT img,dms d){
 int L=d.h*d.r,C=d.lg*d.r;
 ptrPixelT clr=(ptrPixelT)malloc(sizeof(pixelT)*distinct(img,d));
@@ -250,7 +249,7 @@ if(i!=L-1 && MC[i][C-1]!=MC[i+1][0])    {clr[s]=MC[i+1][0];s++;}
 return clr;
 }
 
-//frequance d'une couleur dans une image
+//frequency of a color in an image
 float frequance(imgT img,dms d,pixelT c){
 int s=0;
 float t;
@@ -263,7 +262,7 @@ return t;
 }
 
 
-//afficher des couleurs d'une image et leurs frequances
+//display colors of an image and their frequencies
 void affiher_tab_clr(imgT img,dms d){
 ptrPixelT m=coleurs(img,d);
 float max=frequance(img,d,*(m));int indice_max=0;
@@ -282,7 +281,7 @@ void Negatif(imgT neg/*destination*/,imgT img/*source*/,dms d){
 }
 
 
-//--------------------------------------------MENU------------------------------------
+// Displays the menu of options
 void Menu(){
 printf("*******************AIT BEN YISSA HAMZA************************\n\n");
 printf("* 1---->    Create image                                 *\n");
@@ -298,7 +297,7 @@ printf("*10---->    Quit                                         *\n");
 printf("********************ENSET GLSID S1****************************\n\n");
 }
 
-// main menu:
+// Gets the user's menu choice
 int menu(){
 int c;
 do{
@@ -309,7 +308,7 @@ if(c<1 || c>10) {printf("\tInvalid choice !\n\n");sleep(1);};
 return c;
 }
 
-// -------------------------------------------------application-----------------------------------
+// Main application logic
 int main(){
 	int lg,h,r,a,k=0,choice;dms d;
 	coordt1 crd;
@@ -358,7 +357,6 @@ int main(){
                   printf("New pixel  :  "); scanf("%u",&cn);printf("\n\n");
                   img_remplissage=createImage(d);
 				  remplir(img_remplissage,img,d,crd,cn);
-				 // remplir(img_remplissage,img,d,crd,0);
                   afficher(img_remplissage,d);
                   printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
