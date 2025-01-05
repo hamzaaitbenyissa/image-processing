@@ -23,9 +23,9 @@ imgT createImage(dms d){
 }
 //pour saiser les donnees
 void saisir(int *ptrL,int *ptrH,int *ptrR){
-	printf("Longueur : ");
+	printf("Length : ");
 	scanf("%d",ptrL);
-	printf("Hauteur : ");
+	printf("Height : ");
 	scanf("%d",ptrH);
 	printf("Resolution : ");
 	scanf("%d",ptrR);
@@ -40,7 +40,7 @@ void initImg(imgT im,dms d){
 //affichage d'image
 void afficher(imgT im,dms d){
 	int L=d.h*d.r,C=d.lg*d.r;
-	printf("Image{\n\tLongueur:%d\n\tHauteur:%d\n\tListePixels:[\n"
+	printf("Image{\n\tLength:%d\n\tHeight:%d\n\tPixelList:[\n"
 	,d.lg,d.h);
 	for(int i=0;i<L;i++){
 		printf("\t\t");
@@ -268,10 +268,10 @@ void affiher_tab_clr(imgT img,dms d){
 ptrPixelT m=coleurs(img,d);
 float max=frequance(img,d,*(m));int indice_max=0;
 for(int i=0;i<distinct(img,d);i++){
-printf("coleur%d : %u----------->%.2f %c\n\n",i,*(m+i),frequance(img,d,*(m+i)),37);
+printf("color%d : %u----------->%.2f %%\n\n",i,*(m+i),frequance(img,d,*(m+i)));
 if(max<frequance(img,d,*(m+i))){ max=frequance(img,d,*(m+i));indice_max=i;}    
 }
-printf("\n\nla couleur dominante est :%4u",*(m+indice_max));
+printf("\n\nThe dominant color is :%4u",*(m+indice_max));
 }
 void Negatif(imgT neg/*destination*/,imgT img/*source*/,dms d){
 			for(int i=0;i<d.r*d.h;i++)
@@ -285,24 +285,23 @@ void Negatif(imgT neg/*destination*/,imgT img/*source*/,dms d){
 //--------------------------------------------MENU------------------------------------
 void Menu(){
 printf("*******************AIT BEN YISSA HAMZA************************\n\n");
-printf("* 1---->    Create image                                 *\n\n");
-printf("* 2---->    Show image                                *\n\n");
-printf("* 3---->    Frequencies                                       *\n\n");
-printf("* 4---->    Negative                                          *\n\n");
-printf("* 5---->    Fill                                      *\n\n");
-printf("* 6---->    Horizontal Mirror                                *\n\n");
-printf("* 7---->    Vertical Mirror                                  *\n\n");
-printf("* 8---->    Clear screen                                    *\n\n");
-printf("* 9---->    Menu                                             *\n\n");
-printf("*10---->    Quit                                          *\n\n");
-printf("********************ENSET GLSID S1****************************\n\n");	
+printf("* 1---->    Create image                                 *\n");
+printf("* 2---->    Show image                                   *\n");
+printf("* 3---->    Frequencies                                  *\n");
+printf("* 4---->    Negative                                     *\n");
+printf("* 5---->    Fill                                         *\n");
+printf("* 6---->    Horizontal Mirror                            *\n");
+printf("* 7---->    Vertical Mirror                              *\n");
+printf("* 8---->    Clear screen                                 *\n");
+printf("* 9---->    Menu                                         *\n");
+printf("*10---->    Quit                                         *\n");
+printf("********************ENSET GLSID S1****************************\n\n");
 }
 
 // main menu:
 int menu(){
 int c;
 do{
-//system("cls");
 printf("Enter your choice :  "); scanf("%d",&c);
 printf("\n\n");
 if(c<1 || c>10) {printf("\tInvalid choice !\n\n");sleep(1);};
@@ -321,14 +320,14 @@ int main(){
         choice=menu();
 
         switch (choice){
-            case 1: 
+            case 1:
                     saisir(&lg,&h,&r);
 	                d.lg=lg;d.h=h;d.r=r;
 	                img=createImage(d);
 	                initImg(img,d);
 	                k++;
 	            printf("\n\n\t Operation completed successfully.  \n\n");
-					sleep(1);	
+					sleep(1);
 					   break;
             case 2:
             	if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
@@ -342,21 +341,21 @@ int main(){
 				    printf("\n\n");
                     sleep(1);
 					break;
-		    case 4:	
+		    case 4:
                    if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 				  img_negatif=createImage(d);
                   Negatif(img_negatif,img,d);
-			      afficher(img_negatif,d); 
+			      afficher(img_negatif,d);
                   printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
                   break;
 				    break;
-			case 5:	
+			case 5:
 			      if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 			      printf("\nPlease enter the coordinates  :  \n\n");
-			      printf("\n\tX :  ");  scanf("%d",&crd.x);
-			      printf("\n\tY :  ");  scanf("%d",&crd.y);
-                  printf("\nNew pixel  :  "); scanf("%u",&cn);printf("\n\n");
+			      printf("\tX :  ");  scanf("%d",&crd.x);
+			      printf("\tY :  ");  scanf("%d",&crd.y);
+                  printf("New pixel  :  "); scanf("%u",&cn);printf("\n\n");
                   img_remplissage=createImage(d);
 				  remplir(img_remplissage,img,d,crd,cn);
 				 // remplir(img_remplissage,img,d,crd,0);
@@ -364,11 +363,11 @@ int main(){
                   printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
 					break;
-			case 6:	
+			case 6:
 			if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
                 img_miroir_H=createImage(d);
                 Miroir_H(img_miroir_H,img,d);
-				afficher(img_miroir_H,d); 
+				afficher(img_miroir_H,d);
                   printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
                   break;
@@ -376,14 +375,14 @@ int main(){
 				if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 				img_miroir_V=createImage(d);
                 Miroir_V(img_miroir_V,img,d);
-				afficher(img_miroir_V,d); 
+				afficher(img_miroir_V,d);
                   printf("\n\n\t Operation completed successfully.  \n\n");
-                  sleep(1);			
+                  sleep(1);
 			 break;
-			case 8:system("cls");Menu(); break; 
-			case 9:Menu(); break; 
-			
-			case 10: printf("\n\tThank you for using our service.\n");
+			case 8:system("cls");Menu(); break;
+			case 9:Menu(); break;
+
+			case 10: printf("\n\tThank you for using our service.\n\n");
 			default:
 			    break;
 			}
