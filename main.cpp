@@ -298,29 +298,29 @@ printf("*10---->    Quit                                          *\n\n");
 printf("********************ENSET GLSID S1****************************\n\n");	
 }
 
-// menu principal:
+// main menu:
 int menu(){
 int c;
 do{
 //system("cls");
-printf("Saiser une choix :  "); scanf("%d",&c);
+printf("Enter your choice :  "); scanf("%d",&c);
 printf("\n\n");
-if(c<1 || c>10) {printf("\tChoix Invalid !\n\n");sleep(1);};
+if(c<1 || c>10) {printf("\tInvalid choice !\n\n");sleep(1);};
 }while(c<1 || c>10);
 return c;
 }
 
 // -------------------------------------------------application-----------------------------------
 int main(){
-	int lg,h,r,a,k=0,choix;dms d;
+	int lg,h,r,a,k=0,choice;dms d;
 	coordt1 crd;
     int cn;
 	imgT img,img_remplissage,img_miroir_V,img_miroir_H,img_negatif;
-Menu();
-do{
-        choix=menu();
+    Menu();
+    do{
+        choice=menu();
 
-        switch (choix){
+        switch (choice){
             case 1: 
                     saisir(&lg,&h,&r);
 	                d.lg=lg;d.h=h;d.r=r;
@@ -387,6 +387,6 @@ do{
 			default:
 			    break;
 			}
-				}while (choix!=10);
+				}while (choice!=10);
     return 0;
 }
