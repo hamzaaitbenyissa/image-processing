@@ -26,7 +26,7 @@ imgT createImage(dms d)
 }
 
 // gets image dimensions
-void saisir(int *ptrL, int *ptrH, int *ptrR)
+void getImageDimensions(int *ptrL, int *ptrH, int *ptrR)
 {
 	printf("Length : ");
 	scanf("%d", ptrL);
@@ -45,7 +45,7 @@ void initImg(imgT im, dms d)
 }
 
 // displays image
-void afficher(imgT im, dms d)
+void displayImage(imgT im, dms d)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
 
@@ -75,7 +75,7 @@ void afficher(imgT im, dms d)
 }
 
 // copies an image
-void copier(imgT cop, imgT org, dms d)
+void copyImage(imgT cop, imgT org, dms d)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
 	for (int i = 0; i < L; i++)
@@ -104,7 +104,7 @@ typedef struct
 
 // queue operations:
 
-void enfiler(filet *ptrF, coordt1 px)
+void enqueue(filet *ptrF, coordt1 px)
 {
 	coordt *p = (coordt *)malloc(sizeof(coordt));
 	p->x = px.x;
@@ -117,12 +117,12 @@ void enfiler(filet *ptrF, coordt1 px)
 	ptrF->queue = p;
 }
 
-int estVide(filet f)
+int isEmpty(filet f)
 {
 	return f.queue == NULL;
 }
 
-coordt1 defiler(filet *ptrF)
+coordt1 dequeue(filet *ptrF)
 {
 	coordt1 c = {-1, -1}; // empty queue
 	coordt *s;
@@ -144,7 +144,7 @@ coordt1 defiler(filet *ptrF)
 //-------------------------------------image effects---------------------------------------------
 
 //-----------------------------------transpose an image----------------------------------
-void img_transpose(imgT imgtr /*destination*/, imgT img /*source*/, dms d)
+void transposeImage(imgT imgtr /*destination*/, imgT img /*source*/, dms d)
 {
 	for (int i = 0; i < d.h * d.r; i++)
 		for (int j = 0; j < d.lg * d.r; j++)
@@ -152,11 +152,11 @@ void img_transpose(imgT imgtr /*destination*/, imgT img /*source*/, dms d)
 }
 
 // Horizontal mirror effect
-void Miroir_H(imgT mir /*destination*/, imgT img /*source*/, dms d)
+void horizontalMirror(imgT mir /*destination*/, imgT img /*source*/, dms d)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
 	int i, ii;
-	copier(mir, img, d);
+	copyImage(mir, img, d);
 	for (i = 0, ii = L - 1; i < ii; i++, ii--)
 	{
 		ptrPixelT temp = img[i];
@@ -166,58 +166,58 @@ void Miroir_H(imgT mir /*destination*/, imgT img /*source*/, dms d)
 }
 
 // Vertical mirror effect
-void Miroir_V(imgT mir /*destination*/, imgT img /*source*/, dms d)
+void verticalMirror(imgT mir /*destination*/, imgT img /*source*/, dms d)
 {
 	dms dt = {d.h, d.lg, d.r};
 	imgT img_temp1 = createImage(dt);
 	imgT img_temp2 = createImage(dt);
-	img_transpose(img_temp2, img, dt);
-	Miroir_H(img_temp1, img_temp2, dt);
-	img_transpose(mir, img_temp1, d);
+	transposeImage(img_temp2, img, dt);
+	horizontalMirror(img_temp1, img_temp2, dt);
+	transposeImage(mir, img_temp1, d);
 }
 
 // fill the image
-void remplir(imgT im /*destination*/, imgT img /*source*/, dms d, coordt1 px, pixelT cn)
+void fillImage(imgT im /*destination*/, imgT img /*source*/, dms d, coordt1 px, pixelT cn)
 {
-	copier(im, img, d);
+	copyImage(im, img, d);
 	filet f = {NULL, NULL}; // empty queue;
 	coordt1 px2, px1;
-	enfiler(&f, px);
+	enqueue(&f, px);
 	pixelT c0 = im[px.x][px.y];
-	while (!estVide(f))
+	while (!isEmpty(f))
 	{
-		px1 = defiler(&f);
+		px1 = dequeue(&f);
 		im[px1.x][px1.y] = cn;
 		if (px1.x > 0 && im[px1.x - 1][px1.y] == c0)
 		{
 			px2.x = px1.x - 1;
 			px2.y = px1.y;
-			enfiler(&f, px2);
+			enqueue(&f, px2);
 		}
 		if (px1.y > 0 && im[px1.x][px1.y - 1] == c0)
 		{
 			px2.x = px1.x;
 			px2.y = px1.y - 1;
-			enfiler(&f, px2);
+			enqueue(&f, px2);
 		}
 		if (px1.x < d.h * d.r - 1 && im[px1.x + 1][px1.y] == c0)
 		{
 			px2.x = px1.x + 1;
 			px2.y = px1.y;
-			enfiler(&f, px2);
+			enqueue(&f, px2);
 		}
 		if (px1.y < d.lg * d.r - 1 && im[px1.x][px1.y + 1] == c0)
 		{
 			px2.x = px1.x;
 			px2.y = px1.y + 1;
-			enfiler(&f, px2);
+			enqueue(&f, px2);
 		}
 	}
 }
 
 //-----------------------------------sort an image----------------------------------
 // find the min of a line
-int ligne_min(imgT M, dms d, int i0, int j0)
+int findMinInRow(imgT M, dms d, int i0, int j0)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
 	pixelT min = M[i0][j0];
@@ -247,7 +247,7 @@ int ligne_min(imgT M, dms d, int i0, int j0)
 }
 
 // find the min of a column
-int colonne_min(imgT M, dms d, int i0, int j0)
+int findMinInColumn(imgT M, dms d, int i0, int j0)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
 	pixelT min = M[i0][j0];
@@ -277,7 +277,7 @@ int colonne_min(imgT M, dms d, int i0, int j0)
 }
 
 // swap two pixels
-void echanger(imgT M, int i0, int j0, int i1, int j1)
+void swapPixels(imgT M, int i0, int j0, int i1, int j1)
 {
 	pixelT aux;
 	aux = M[i0][j0];
@@ -286,23 +286,23 @@ void echanger(imgT M, int i0, int j0, int i1, int j1)
 }
 
 // sorting algorithm
-void trier(imgT M, dms d)
+void sortImage(imgT M, dms d)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
 	int i, j;
 	for (i = 0; i < L; i++)
 		for (j = 0; j < C; j++)
-			echanger(M, i, j, ligne_min(M, d, i, j), colonne_min(M, d, i, j));
+			swapPixels(M, i, j, findMinInRow(M, d, i, j), findMinInColumn(M, d, i, j));
 }
 
 //------------------------------------dominant color-------------------------------
 // know the number of distinct colors in an image
-int distinct(imgT M, dms d)
+int countDistinctColors(imgT M, dms d)
 {
 	imgT MC = createImage(d);
-	copier(MC, M, d);
+	copyImage(MC, M, d);
 	int L = d.h * d.r, C = d.lg * d.r;
-	trier(MC, d);
+	sortImage(MC, d);
 	int s = 1, i, j;
 	for (i = 0; i < L; i++)
 	{
@@ -316,13 +316,13 @@ int distinct(imgT M, dms d)
 }
 
 // get the colors of an image
-ptrPixelT coleurs(imgT img, dms d)
+ptrPixelT getColors(imgT img, dms d)
 {
 	int L = d.h * d.r, C = d.lg * d.r;
-	ptrPixelT clr = (ptrPixelT)malloc(sizeof(pixelT) * distinct(img, d));
+	ptrPixelT clr = (ptrPixelT)malloc(sizeof(pixelT) * countDistinctColors(img, d));
 	imgT MC = createImage(d);
-	copier(MC, img, d);
-	trier(MC, d);
+	copyImage(MC, img, d);
+	sortImage(MC, d);
 	int s = 1, i, j;
 	clr[0] = MC[0][0];
 	for (i = 0; i < L; i++)
@@ -343,7 +343,7 @@ ptrPixelT coleurs(imgT img, dms d)
 }
 
 // frequency of a color in an image
-float frequance(imgT img, dms d, pixelT c)
+float getColorFrequency(imgT img, dms d, pixelT c)
 {
 	int s = 0;
 	float t;
@@ -358,23 +358,23 @@ float frequance(imgT img, dms d, pixelT c)
 }
 
 // display colors of an image and their frequencies
-void affiher_tab_clr(imgT img, dms d)
+void displayColorFrequencies(imgT img, dms d)
 {
-	ptrPixelT m = coleurs(img, d);
-	float max = frequance(img, d, *(m));
+	ptrPixelT m = getColors(img, d);
+	float max = getColorFrequency(img, d, *(m));
 	int indice_max = 0;
-	for (int i = 0; i < distinct(img, d); i++)
+	for (int i = 0; i < countDistinctColors(img, d); i++)
 	{
-		printf("color%d : %u----------->%.2f %%\n\n", i, *(m + i), frequance(img, d, *(m + i)));
-		if (max < frequance(img, d, *(m + i)))
+		printf("color%d : %u----------->%.2f %%\n\n", i, *(m + i), getColorFrequency(img, d, *(m + i)));
+		if (max < getColorFrequency(img, d, *(m + i)))
 		{
-			max = frequance(img, d, *(m + i));
+			max = getColorFrequency(img, d, *(m + i));
 			indice_max = i;
 		}
 	}
 	printf("\n\nThe dominant color is :%4u", *(m + indice_max));
 }
-void Negatif(imgT neg /*destination*/, imgT img /*source*/, dms d)
+void applyNegativeFilter(imgT neg /*destination*/, imgT img /*source*/, dms d)
 {
 	for (int i = 0; i < d.r * d.h; i++)
 		for (int j = 0; j < d.r * d.lg; j++)
@@ -431,7 +431,7 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 	switch (choice)
 	{
 	case 1:
-		saisir(&d.lg, &d.h, &d.r);
+		getImageDimensions(&d.lg, &d.h, &d.r);
 		img = createImage(d);
 		initImg(img, d);
 		k++;
@@ -444,7 +444,7 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 			printf("\nPlease create an image first!\n\n");
 			break;
 		}
-		afficher(img, d);
+		displayImage(img, d);
 		printf("\n\n\t Operation completed successfully.  \n\n");
 		sleep(1);
 		break;
@@ -454,7 +454,7 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 			printf("\nPlease create an image first!\n\n");
 			break;
 		}
-		affiher_tab_clr(img, d);
+		displayColorFrequencies(img, d);
 		printf("\n\n");
 		sleep(1);
 		break;
@@ -465,8 +465,8 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 			break;
 		}
 		img_negatif = createImage(d);
-		Negatif(img_negatif, img, d);
-		afficher(img_negatif, d);
+		applyNegativeFilter(img_negatif, img, d);
+		displayImage(img_negatif, d);
 		printf("\n\n\t Operation completed successfully.  \n\n");
 		sleep(1);
 		break;
@@ -485,8 +485,8 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 		scanf("%u", &cn);
 		printf("\n\n");
 		img_remplissage = createImage(d);
-		remplir(img_remplissage, img, d, crd, cn);
-		afficher(img_remplissage, d);
+		fillImage(img_remplissage, img, d, crd, cn);
+		displayImage(img_remplissage, d);
 		printf("\n\n\t Operation completed successfully.  \n\n");
 		sleep(1);
 		break;
@@ -497,8 +497,8 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 			break;
 		}
 		img_miroir_H = createImage(d);
-		Miroir_H(img_miroir_H, img, d);
-		afficher(img_miroir_H, d);
+		horizontalMirror(img_miroir_H, img, d);
+		displayImage(img_miroir_H, d);
 		printf("\n\n\t Operation completed successfully.  \n\n");
 		sleep(1);
 		break;
@@ -509,8 +509,8 @@ void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
 			break;
 		}
 		img_miroir_V = createImage(d);
-		Miroir_V(img_miroir_V, img, d);
-		afficher(img_miroir_V, d);
+		verticalMirror(img_miroir_V, img, d);
+		displayImage(img_miroir_V, d);
 		printf("\n\n\t Operation completed successfully.  \n\n");
 		sleep(1);
 		break;
