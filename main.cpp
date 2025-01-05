@@ -327,63 +327,63 @@ do{
 	                img=creerImg(d);
 	                initImg(img,d);
 	                k++;
-	            printf("\n\n\t L'op%cration a %ct%c effectu%c avec succ%cs .  \n\n",130,130,130,130,138);
+	            printf("\n\n\t Operation completed successfully.  \n\n");
 					sleep(1);	
 					   break;
             case 2:
-            	if(k==0) {printf("\nVeuillez cr%cer Une Image D'Abord !\n\n",130); break;}
+            	if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 	            	afficher(img,d);
-                    printf("\n\n\t L'op%cration a %ct%c effectu%c avec succ%cs .  \n\n",130,130,130,130,138);
+                    printf("\n\n\t Operation completed successfully.  \n\n");
 					sleep(1);
 					break;
 			case 3:
-				if(k==0) {printf("\nVeuillez cr%cer Une Image D'Abord !\n\n",130); break;}
+				if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 				    affiher_tab_clr(img,d);
 				    printf("\n\n");
                     sleep(1);
 					break;
 		    case 4:	
-                   if(k==0) {printf("\nVeuillez cr%cer Une Image D'Abord !\n\n",130); break;}
+                   if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 				  img_negatif=creerImg(d);
                   Negatif(img_negatif,img,d);
 			      afficher(img_negatif,d); 
-                  printf("\n\n\t L'op%cration a %ct%c effectu%c avec succ%cs .  \n\n",130,130,130,130,138);
+                  printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
                   break;
 				    break;
 			case 5:	
-			      if(k==0) {printf("\nVeuillez cr%cer Une Image D'Abord !\n\n",130); break;}
-			      printf("\nVeuillez inserer les coordonn%ces  :  \n\n",130);
+			      if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
+			      printf("\nPlease enter the coordinates  :  \n\n");
 			      printf("\n\tX :  ");  scanf("%d",&crd.x);
 			      printf("\n\tY :  ");  scanf("%d",&crd.y);
-                  printf("\nNouveau pixel  :  "); scanf("%u",&cn);printf("\n\n");
+                  printf("\nNew pixel  :  "); scanf("%u",&cn);printf("\n\n");
                   img_remplissage=creerImg(d);
 				  remplir(img_remplissage,img,d,crd,cn);
 				 // remplir(img_remplissage,img,d,crd,0);
                   afficher(img_remplissage,d);
-                  printf("\n\n\t L'op%cration a %ct%c effectu%c avec succ%cs .  \n\n",130,130,130,130,138);
+                  printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
 					break;
 			case 6:	
-			if(k==0) {printf("\nVeuillez cr%cer Une Image D'Abord !\n\n",130); break;}
+			if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
                 img_miroir_H=creerImg(d);
                 Miroir_H(img_miroir_H,img,d);
 				afficher(img_miroir_H,d); 
-                  printf("\n\n\t L'op%cration a %ct%c effectu%c avec succ%cs .  \n\n",130,130,130,130,138);
+                  printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);
                   break;
 			case 7:
-				if(k==0) {printf("\nVeuillez cr%cer Une Image D'Abord !\n\n",130); break;}
+				if(k==0) {printf("\nPlease create an image first!\n\n"); break;}
 				img_miroir_V=creerImg(d);
                 Miroir_V(img_miroir_V,img,d);
 				afficher(img_miroir_V,d); 
-                  printf("\n\n\t L'op%cration a %ct%c effectu%c avec succ%cs .  \n\n",130,130,130,130,138);
+                  printf("\n\n\t Operation completed successfully.  \n\n");
                   sleep(1);			
 			 break;
 			case 8:system("cls");Menu(); break; 
 			case 9:Menu(); break; 
 			
-			case 10: printf("\n\tMerci Pour L'utilisation de notre service.\n");
+			case 10: printf("\n\tThank you for using our service.\n");
 			default:
 			    break;
 			}
