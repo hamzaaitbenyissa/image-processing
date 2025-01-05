@@ -1,7 +1,3 @@
-//traitement d'une image
-//réalisé par : Hamza AIT BEN YISSA
-//classe:GLSID1
-//dernière modification: 30-01-2020
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -25,7 +21,7 @@ imgT creerImg(dms d){
 	img[i]=(ptrPixelT)malloc(C*sizeof(pixelT));
 	return img;	
 }
-//pour saiser les données
+//pour saiser les donnees
 void saisir(int *ptrL,int *ptrH,int *ptrR){
 	printf("Longueur : ");
 	scanf("%d",ptrL);
@@ -64,7 +60,7 @@ cop[i][j]=org[i][j];
 }
 //--------------------------------------une file dynamique------------------------------
 
-//définir une file dynamique
+//definir une file dynamique
 typedef struct{
 	int x,y;
 }coordt1;
@@ -79,7 +75,7 @@ typedef struct{
 	coordt *tete,*queue;	
 }filet;
 
-//opérations sur la file:
+//operations sur la file:
 
 void enfiler(filet *ptrF,coordt1 px){
 	coordt *p=(coordt *)malloc(sizeof(coordt));
@@ -289,16 +285,16 @@ void Negatif(imgT neg/*destination*/,imgT img/*source*/,dms d){
 //--------------------------------------------MENU------------------------------------
 void Menu(){
 printf("*******************AIT BEN YISSA HAMZA************************\n\n");
-printf("* 1---->    Creation d'image                                 *\n\n");
-printf("* 2---->    Affichage d'image                                *\n\n");
-printf("* 3---->    Fr%cquences                                       *\n\n",130);
-printf("* 4---->    N%cgatif                                          *\n\n",130);
-printf("* 5---->    Remplissage                                      *\n\n");
-printf("* 6---->    Miroir Horizontal                                *\n\n");
-printf("* 7---->    Miroir Vertical                                  *\n\n");
-printf("* 8---->    Vider l'%ccran                                    *\n\n",130);
+printf("* 1---->    Create image                                 *\n\n");
+printf("* 2---->    Show image                                *\n\n");
+printf("* 3---->    Frequencies                                       *\n\n");
+printf("* 4---->    Negative                                          *\n\n");
+printf("* 5---->    Fill                                      *\n\n");
+printf("* 6---->    Horizontal Mirror                                *\n\n");
+printf("* 7---->    Vertical Mirror                                  *\n\n");
+printf("* 8---->    Clear screen                                    *\n\n");
 printf("* 9---->    Menu                                             *\n\n");
-printf("*10---->    Quitter                                          *\n\n");
+printf("*10---->    Quit                                          *\n\n");
 printf("********************ENSET GLSID S1****************************\n\n");	
 }
 
