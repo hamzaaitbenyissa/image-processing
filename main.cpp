@@ -47,29 +47,31 @@ void initImg(imgT im, dms d)
 // displays image
 void afficher(imgT im, dms d)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
+	int L = d.h * d.r, C = d.lg * d.r;
 
-    // Print top border
-    printf("  +");
-    for (int j = 0; j < C; j++) {
-        printf("-----");
-    }
-    printf("+\n");
+	// Print top border
+	printf("  +");
+	for (int j = 0; j < C; j++)
+	{
+		printf("-----");
+	}
+	printf("+\n");
 
-    for (int i = 0; i < L; i++)
-    {
-        printf("  |");
-        for (int j = 0; j < C; j++)
-            printf(" %3u |", im[i][j]);
-        printf("\n");
+	for (int i = 0; i < L; i++)
+	{
+		printf("  |");
+		for (int j = 0; j < C; j++)
+			printf(" %3u |", im[i][j]);
+		printf("\n");
 
-        // Print separator between rows
-        printf("  +");
-        for (int j = 0; j < C; j++) {
-            printf("-----");
-        }
-        printf("+\n");
-    }
+		// Print separator between rows
+		printf("  +");
+		for (int j = 0; j < C; j++)
+		{
+			printf("-----");
+		}
+		printf("+\n");
+	}
 }
 
 // copies an image
@@ -419,122 +421,127 @@ int menu()
 	return c;
 }
 
+// Function to handle menu choices
+void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
+{
+	coordt1 crd;
+	int cn;
+	imgT img_remplissage, img_miroir_V, img_miroir_H, img_negatif;
+
+	switch (choice)
+	{
+	case 1:
+		saisir(&d.lg, &d.h, &d.r);
+		img = createImage(d);
+		initImg(img, d);
+		k++;
+		printf("\n\n\t Operation completed successfully.  \n\n");
+		sleep(1);
+		break;
+	case 2:
+		if (k == 0)
+		{
+			printf("\nPlease create an image first!\n\n");
+			break;
+		}
+		afficher(img, d);
+		printf("\n\n\t Operation completed successfully.  \n\n");
+		sleep(1);
+		break;
+	case 3:
+		if (k == 0)
+		{
+			printf("\nPlease create an image first!\n\n");
+			break;
+		}
+		affiher_tab_clr(img, d);
+		printf("\n\n");
+		sleep(1);
+		break;
+	case 4:
+		if (k == 0)
+		{
+			printf("\nPlease create an image first!\n\n");
+			break;
+		}
+		img_negatif = createImage(d);
+		Negatif(img_negatif, img, d);
+		afficher(img_negatif, d);
+		printf("\n\n\t Operation completed successfully.  \n\n");
+		sleep(1);
+		break;
+	case 5:
+		if (k == 0)
+		{
+			printf("\nPlease create an image first!\n\n");
+			break;
+		}
+		printf("\nPlease enter the coordinates  :  \n\n");
+		printf("\tX :  ");
+		scanf("%d", &crd.x);
+		printf("\tY :  ");
+		scanf("%d", &crd.y);
+		printf("New pixel  :  ");
+		scanf("%u", &cn);
+		printf("\n\n");
+		img_remplissage = createImage(d);
+		remplir(img_remplissage, img, d, crd, cn);
+		afficher(img_remplissage, d);
+		printf("\n\n\t Operation completed successfully.  \n\n");
+		sleep(1);
+		break;
+	case 6:
+		if (k == 0)
+		{
+			printf("\nPlease create an image first!\n\n");
+			break;
+		}
+		img_miroir_H = createImage(d);
+		Miroir_H(img_miroir_H, img, d);
+		afficher(img_miroir_H, d);
+		printf("\n\n\t Operation completed successfully.  \n\n");
+		sleep(1);
+		break;
+	case 7:
+		if (k == 0)
+		{
+			printf("\nPlease create an image first!\n\n");
+			break;
+		}
+		img_miroir_V = createImage(d);
+		Miroir_V(img_miroir_V, img, d);
+		afficher(img_miroir_V, d);
+		printf("\n\n\t Operation completed successfully.  \n\n");
+		sleep(1);
+		break;
+	case 8:
+		system("cls");
+		Menu();
+		break;
+	case 9:
+		Menu();
+		break;
+	case 10:
+		printf("\n\tThank you for using our service.\n\n");
+		break;
+	default:
+		break;
+	}
+}
+
 // Main application logic
 int main()
 {
-	int lg, h, r, a, k = 0, choice;
+	int choice;
 	dms d;
-	coordt1 crd;
-	int cn;
-	imgT img, img_remplissage, img_miroir_V, img_miroir_H, img_negatif;
+	imgT img = NULL;
+	int k = 0;
+
 	Menu();
 	do
 	{
 		choice = menu();
-
-		switch (choice)
-		{
-		case 1:
-			saisir(&lg, &h, &r);
-			d.lg = lg;
-			d.h = h;
-			d.r = r;
-			img = createImage(d);
-			initImg(img, d);
-			k++;
-			printf("\n\n\t Operation completed successfully.  \n\n");
-			sleep(1);
-			break;
-		case 2:
-			if (k == 0)
-			{
-				printf("\nPlease create an image first!\n\n");
-				break;
-			}
-			afficher(img, d);
-			printf("\n\n\t Operation completed successfully.  \n\n");
-			sleep(1);
-			break;
-		case 3:
-			if (k == 0)
-			{
-				printf("\nPlease create an image first!\n\n");
-				break;
-			}
-			affiher_tab_clr(img, d);
-			printf("\n\n");
-			sleep(1);
-			break;
-		case 4:
-			if (k == 0)
-			{
-				printf("\nPlease create an image first!\n\n");
-				break;
-			}
-			img_negatif = createImage(d);
-			Negatif(img_negatif, img, d);
-			afficher(img_negatif, d);
-			printf("\n\n\t Operation completed successfully.  \n\n");
-			sleep(1);
-			break;
-			break;
-		case 5:
-			if (k == 0)
-			{
-				printf("\nPlease create an image first!\n\n");
-				break;
-			}
-			printf("\nPlease enter the coordinates  :  \n\n");
-			printf("\tX :  ");
-			scanf("%d", &crd.x);
-			printf("\tY :  ");
-			scanf("%d", &crd.y);
-			printf("New pixel  :  ");
-			scanf("%u", &cn);
-			printf("\n\n");
-			img_remplissage = createImage(d);
-			remplir(img_remplissage, img, d, crd, cn);
-			afficher(img_remplissage, d);
-			printf("\n\n\t Operation completed successfully.  \n\n");
-			sleep(1);
-			break;
-		case 6:
-			if (k == 0)
-			{
-				printf("\nPlease create an image first!\n\n");
-				break;
-			}
-			img_miroir_H = createImage(d);
-			Miroir_H(img_miroir_H, img, d);
-			afficher(img_miroir_H, d);
-			printf("\n\n\t Operation completed successfully.  \n\n");
-			sleep(1);
-			break;
-		case 7:
-			if (k == 0)
-			{
-				printf("\nPlease create an image first!\n\n");
-				break;
-			}
-			img_miroir_V = createImage(d);
-			Miroir_V(img_miroir_V, img, d);
-			afficher(img_miroir_V, d);
-			printf("\n\n\t Operation completed successfully.  \n\n");
-			sleep(1);
-			break;
-		case 8:
-			system("cls");
-			Menu();
-			break;
-		case 9:
-			Menu();
-			break;
-
-		case 10:
-			printf("\n\tThank you for using our service.\n\n");
-		default:
-			break;
-		}
+		handleMenuChoice(choice, img, d, k);
 	} while (choice != 10);
 	return 0;
 }
