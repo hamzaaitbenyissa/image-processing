@@ -35,5 +35,4 @@ The program offers the following functionalities:
 
 ## Screenshots
 
-![Menu](screenshoots/menu.png)
-![Show Matrix](screenshoots/show matrix.png)
+![image](https://github.com/user-attachments/assets/ff8a88db-3bd0-4c49-a298-4afe4bf8a518)
