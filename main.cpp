@@ -8,16 +8,16 @@
 // Main application logic
 int main()
 {
-	int choice;
-	dms d;
-	imgT img = NULL;
-	int k = 0;
+	int menuChoice;
+	Dimensions imageDimensions;
+	Image image = NULL;
+	int imageCount = 0;
 
 	Menu();
 	do
 	{
-		choice = menu();
-		handleMenuChoice(choice, img, d, k);
-	} while (choice != 10);
+		menuChoice = menu();
+		handleMenuChoice(menuChoice, image, imageDimensions, imageCount);
+	} while (menuChoice != 10);
 	return 0;
 }

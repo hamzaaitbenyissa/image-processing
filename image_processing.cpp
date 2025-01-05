@@ -1,15 +1,15 @@
 #include "image_processing.h"
 
 // creates an image
-imgT createImage(dms d)
+Image createImage(Dimensions d)
 {
-    imgT img;
-    long C = d.lg * d.r; // number of columns
-    long L = d.h * d.r;  // number of lines
-    img = (imgT)malloc(L * sizeof(ptrPixelT));
-    for (int i = 0; i < L; i++)
-        img[i] = (ptrPixelT)malloc(C * sizeof(pixelT));
-    return img;
+    Image image;
+    long numCols = d.lg * d.r; // number of columns
+    long numRows = d.h * d.r;  // number of lines
+    image = (Image)malloc(numRows * sizeof(PixelPointer));
+    for (int i = 0; i < numRows; i++)
+        image[i] = (PixelPointer)malloc(numCols * sizeof(Pixel));
+    return image;
 }
 
 // gets image dimensions
@@ -24,36 +24,36 @@ void getImageDimensions(int *ptrL, int *ptrH, int *ptrR)
 }
 
 // initializes image pixels with random values
-void initImg(imgT im, dms d)
+void initImg(Image image, Dimensions d)
 {
     for (int i = 0; i < d.r * d.h; i++)
         for (int j = 0; j < d.r * d.lg; j++)
-            im[i][j] = rand() % 256;
+            image[i][j] = rand() % 256;
 }
 
 // displays image
-void displayImage(imgT im, dms d)
+void displayImage(Image image, Dimensions d)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
 
     // Print top border
     printf("  +");
-    for (int j = 0; j < C; j++)
+    for (int j = 0; j < numCols; j++)
     {
         printf("-----");
     }
     printf("+\n");
 
-    for (int i = 0; i < L; i++)
+    for (int i = 0; i < numRows; i++)
     {
         printf("  |");
-        for (int j = 0; j < C; j++)
-            printf(" %3u |", im[i][j]);
+        for (int j = 0; j < numCols; j++)
+            printf(" %3u |", image[i][j]);
         printf("\n");
 
         // Print separator between rows
         printf("  +");
-        for (int j = 0; j < C; j++)
+        for (int j = 0; j < numCols; j++)
         {
             printf("-----");
         }
@@ -62,21 +62,21 @@ void displayImage(imgT im, dms d)
 }
 
 // copies an image
-void copyImage(imgT cop, imgT org, dms d)
+void copyImage(Image destImage, Image srcImage, Dimensions d)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
-    for (int i = 0; i < L; i++)
-        for (int j = 0; j < C; j++)
-            cop[i][j] = org[i][j];
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
+    for (int i = 0; i < numRows; i++)
+        for (int j = 0; j < numCols; j++)
+            destImage[i][j] = srcImage[i][j];
 }
 
 //--------------------------------------dynamic queue------------------------------
 
 // queue operations:
 
-void enqueue(filet *ptrF, coordt1 px)
+void enqueue(Queue *ptrF, Coordinate px)
 {
-    coordt *p = (coordt *)malloc(sizeof(coordt));
+    CoordinateNode *p = (CoordinateNode *)malloc(sizeof(CoordinateNode));
     p->x = px.x;
     p->y = px.y;
     p->suivant = NULL;
@@ -87,15 +87,15 @@ void enqueue(filet *ptrF, coordt1 px)
     ptrF->queue = p;
 }
 
-int isEmpty(filet f)
+int isEmpty(Queue f)
 {
     return f.queue == NULL;
 }
 
-coordt1 dequeue(filet *ptrF)
+Coordinate dequeue(Queue *ptrF)
 {
-    coordt1 c = {-1, -1}; // empty queue
-    coordt *s;
+    Coordinate c = {-1, -1}; // empty queue
+    CoordinateNode *s;
     if (ptrF->tete)
     {
         s = ptrF->tete;
@@ -114,244 +114,246 @@ coordt1 dequeue(filet *ptrF)
 //-------------------------------------image effects---------------------------------------------
 
 //-----------------------------------transpose an image----------------------------------
-void transposeImage(imgT imgtr /*destination*/, imgT img /*source*/, dms d)
+void transposeImage(Image transposedImage /*destination*/, Image originalImage /*source*/, Dimensions d)
 {
     for (int i = 0; i < d.h * d.r; i++)
         for (int j = 0; j < d.lg * d.r; j++)
-            imgtr[i][j] = img[j][i];
+            transposedImage[i][j] = originalImage[j][i];
 }
 
 // Horizontal mirror effect
-void horizontalMirror(imgT mir /*destination*/, imgT img /*source*/, dms d)
+void horizontalMirror(Image mirroredImage /*destination*/, Image originalImage /*source*/, Dimensions d)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
     int i, ii;
-    copyImage(mir, img, d);
-    for (i = 0, ii = L - 1; i < ii; i++, ii--)
+    copyImage(mirroredImage, originalImage, d);
+    for (i = 0, ii = numRows - 1; i < ii; i++, ii--)
     {
-        ptrPixelT temp = img[i];
-        mir[i] = mir[ii];
-        mir[ii] = temp;
+        PixelPointer temp = originalImage[i];
+        mirroredImage[i] = mirroredImage[ii];
+        mirroredImage[ii] = temp;
     }
 }
 
 // Vertical mirror effect
-void verticalMirror(imgT mir /*destination*/, imgT img /*source*/, dms d)
+void verticalMirror(Image mirroredImage /*destination*/, Image originalImage /*source*/, Dimensions d)
 {
-    dms dt = {d.h, d.lg, d.r};
-    imgT img_temp1 = createImage(dt);
-    imgT img_temp2 = createImage(dt);
-    transposeImage(img_temp2, img, dt);
-    horizontalMirror(img_temp1, img_temp2, dt);
-    transposeImage(mir, img_temp1, d);
+    Dimensions dt = {d.h, d.lg, d.r};
+    Image tempImage1 = createImage(dt);
+    Image tempImage2 = createImage(dt);
+    transposeImage(tempImage2, originalImage, dt);
+    horizontalMirror(tempImage1, tempImage2, dt);
+    transposeImage(mirroredImage, tempImage1, d);
 }
 
 // fill the image
-void fillImage(imgT im /*destination*/, imgT img /*source*/, dms d, coordt1 px, pixelT cn)
+void fillImage(Image filledImage /*destination*/, Image originalImage /*source*/, Dimensions d, Coordinate startCoordinate, Pixel newColor)
 {
-    copyImage(im, img, d);
-    filet f = {NULL, NULL}; // empty queue;
-    coordt1 px2, px1;
-    enqueue(&f, px);
-    pixelT c0 = im[px.x][px.y];
-    while (!isEmpty(f))
+    copyImage(filledImage, originalImage, d);
+    Queue queue = {NULL, NULL}; // empty queue;
+    Coordinate currentCoordinate, nextCoordinate;
+    enqueue(&queue, startCoordinate);
+    Pixel originalColor = filledImage[startCoordinate.x][startCoordinate.y];
+    while (!isEmpty(queue))
     {
-        px1 = dequeue(&f);
-        im[px1.x][px1.y] = cn;
-        if (px1.x > 0 && im[px1.x - 1][px1.y] == c0)
+        currentCoordinate = dequeue(&queue);
+        filledImage[currentCoordinate.x][currentCoordinate.y] = newColor;
+        if (currentCoordinate.x > 0 && filledImage[currentCoordinate.x - 1][currentCoordinate.y] == originalColor)
         {
-            px2.x = px1.x - 1;
-            px2.y = px1.y;
-            enqueue(&f, px2);
+            nextCoordinate.x = currentCoordinate.x - 1;
+            nextCoordinate.y = currentCoordinate.y;
+            enqueue(&queue, nextCoordinate);
         }
-        if (px1.y > 0 && im[px1.x][px1.y - 1] == c0)
+        if (currentCoordinate.y > 0 && filledImage[currentCoordinate.x][currentCoordinate.y - 1] == originalColor)
         {
-            px2.x = px1.x;
-            px2.y = px1.y - 1;
-            enqueue(&f, px2);
+            nextCoordinate.x = currentCoordinate.x;
+            nextCoordinate.y = currentCoordinate.y - 1;
+            enqueue(&queue, nextCoordinate);
         }
-        if (px1.x < d.h * d.r - 1 && im[px1.x + 1][px1.y] == c0)
+        if (currentCoordinate.x < d.h * d.r - 1 && filledImage[currentCoordinate.x + 1][currentCoordinate.y] == originalColor)
         {
-            px2.x = px1.x + 1;
-            px2.y = px1.y;
-            enqueue(&f, px2);
+            nextCoordinate.x = currentCoordinate.x + 1;
+            nextCoordinate.y = currentCoordinate.y;
+            enqueue(&queue, nextCoordinate);
         }
-        if (px1.y < d.lg * d.r - 1 && im[px1.x][px1.y + 1] == c0)
+        if (currentCoordinate.y < d.lg * d.r - 1 && filledImage[currentCoordinate.x][currentCoordinate.y + 1] == originalColor)
         {
-            px2.x = px1.x;
-            px2.y = px1.y + 1;
-            enqueue(&f, px2);
+            nextCoordinate.x = currentCoordinate.x;
+            nextCoordinate.y = currentCoordinate.y + 1;
+            enqueue(&queue, nextCoordinate);
         }
     }
 }
 
 //-----------------------------------sort an image----------------------------------
 // find the min of a line
-int findMinInRow(imgT M, dms d, int i0, int j0)
+int findMinInRow(Image image, Dimensions d, int startRow, int startCol)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
-    pixelT min = M[i0][j0];
-    int i, j, indice = i0;
-    for (i = i0; i < L; i++)
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
+    Pixel min = image[startRow][startCol];
+    int i, j, minIndex = startRow;
+    for (i = startRow; i < numRows; i++)
     {
-        if (i == i0)
+        if (i == startRow)
         {
-            for (j = j0; j < C; j++)
-                if (min > M[i][j])
+            for (j = startCol; j < numCols; j++)
+                if (min > image[i][j])
                 {
-                    indice = i;
-                    min = M[i][j];
+                    minIndex = i;
+                    min = image[i][j];
                 }
         }
         else
         {
-            for (j = 0; j < C; j++)
-                if (min > M[i][j])
+            for (j = 0; j < numCols; j++)
+                if (min > image[i][j])
                 {
-                    indice = i;
-                    min = M[i][j];
+                    minIndex = i;
+                    min = image[i][j];
                 }
         }
     }
-    return indice;
+    return minIndex;
 }
 
 // find the min of a column
-int findMinInColumn(imgT M, dms d, int i0, int j0)
+int findMinInColumn(Image image, Dimensions d, int startRow, int startCol)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
-    pixelT min = M[i0][j0];
-    int i, j, indice = j0;
-    for (i = i0; i < L; i++)
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
+    Pixel min = image[startRow][startCol];
+    int i, j, minIndex = startCol;
+    for (i = startRow; i < numRows; i++)
     {
-        if (i == i0)
+        if (i == startRow)
         {
-            for (j = j0; j < C; j++)
-                if (min > M[i][j])
+            for (j = startCol; j < numCols; j++)
+                if (min > image[i][j])
                 {
-                    indice = j;
-                    min = M[i][j];
+                    minIndex = j;
+                    min = image[i][j];
                 }
         }
         else
         {
-            for (j = 0; j < C; j++)
-                if (min > M[i][j])
+            for (j = 0; j < numCols; j++)
+                if (min > image[i][j])
                 {
-                    indice = j;
-                    min = M[i][j];
+                    minIndex = j;
+                    min = image[i][j];
                 }
         }
     }
-    return indice;
+    return minIndex;
 }
 
 // swap two pixels
-void swapPixels(imgT M, int i0, int j0, int i1, int j1)
+void swapPixels(Image image, int row1, int col1, int row2, int col2)
 {
-    pixelT aux;
-    aux = M[i0][j0];
-    M[i0][j0] = M[i1][j1];
-    M[i1][j1] = aux;
+    Pixel temp;
+    temp = image[row1][col1];
+    image[row1][col1] = image[row2][col2];
+    image[row2][col2] = temp;
 }
 
 // sorting algorithm
-void sortImage(imgT M, dms d)
+void sortImage(Image image, Dimensions d)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
     int i, j;
-    for (i = 0; i < L; i++)
-        for (j = 0; j < C; j++)
-            swapPixels(M, i, j, findMinInRow(M, d, i, j), findMinInColumn(M, d, i, j));
+    for (i = 0; i < numRows; i++)
+        for (j = 0; j < numCols; j++)
+            swapPixels(image, i, j, findMinInRow(image, d, i, j), findMinInColumn(image, d, i, j));
 }
 
 //------------------------------------dominant color-------------------------------
 // know the number of distinct colors in an image
-int countDistinctColors(imgT M, dms d)
+int countDistinctColors(Image image, Dimensions d)
 {
-    imgT MC = createImage(d);
-    copyImage(MC, M, d);
-    int L = d.h * d.r, C = d.lg * d.r;
-    sortImage(MC, d);
-    int s = 1, i, j;
-    for (i = 0; i < L; i++)
+    Image tempImage = createImage(d);
+    copyImage(tempImage, image, d);
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
+    sortImage(tempImage, d);
+    int distinctColorCount = 1, i, j;
+    for (i = 0; i < numRows; i++)
     {
-        for (j = 0; j < C - 1; j++)
-            if (MC[i][j] != MC[i][j + 1])
-                s++;
-        if (i != L - 1 && MC[i][C - 1] != MC[i + 1][0])
-            s++;
+        for (j = 0; j < numCols - 1; j++)
+            if (tempImage[i][j] != tempImage[i][j + 1])
+                distinctColorCount++;
+        if (i != numRows - 1 && tempImage[i][numCols - 1] != tempImage[i + 1][0])
+            distinctColorCount++;
     }
-    return s;
+    return distinctColorCount;
 }
 
 // get the colors of an image
-ptrPixelT getColors(imgT img, dms d)
+PixelPointer getColors(Image image, Dimensions d)
 {
-    int L = d.h * d.r, C = d.lg * d.r;
-    ptrPixelT clr = (ptrPixelT)malloc(sizeof(pixelT) * countDistinctColors(img, d));
-    imgT MC = createImage(d);
-    copyImage(MC, img, d);
-    sortImage(MC, d);
-    int s = 1, i, j;
-    clr[0] = MC[0][0];
-    for (i = 0; i < L; i++)
+    int numRows = d.h * d.r, numCols = d.lg * d.r;
+    int distinctColorCount = countDistinctColors(image, d);
+    PixelPointer colors = (PixelPointer)malloc(sizeof(Pixel) * distinctColorCount);
+    Image tempImage = createImage(d);
+    copyImage(tempImage, image, d);
+    sortImage(tempImage, d);
+    int colorIndex = 1, i, j;
+    colors[0] = tempImage[0][0];
+    for (i = 0; i < numRows; i++)
     {
-        for (j = 0; j < C - 1; j++)
-            if (MC[i][j] != MC[i][j + 1])
+        for (j = 0; j < numCols - 1; j++)
+            if (tempImage[i][j] != tempImage[i][j + 1])
             {
-                clr[s] = MC[i][j + 1];
-                s++;
+                colors[colorIndex] = tempImage[i][j + 1];
+                colorIndex++;
             }
-        if (i != L - 1 && MC[i][C - 1] != MC[i + 1][0])
+        if (i != numRows - 1 && tempImage[i][numCols - 1] != tempImage[i + 1][0])
         {
-            clr[s] = MC[i + 1][0];
-            s++;
+            colors[colorIndex] = tempImage[i + 1][0];
+            colorIndex++;
         }
     }
-    return clr;
+    return colors;
 }
 
 // frequency of a color in an image
-float getColorFrequency(imgT img, dms d, pixelT c)
+float getColorFrequency(Image image, Dimensions d, Pixel color)
 {
-    int s = 0;
-    float t;
+    int colorCount = 0;
+    float frequency;
     for (int i = 0; i < d.r * d.h; i++)
     {
         for (int j = 0; j < d.r * d.lg; j++)
-            if (img[i][j] == c)
-                s++;
+            if (image[i][j] == color)
+                colorCount++;
     }
-    t = float(s * 100) / float(d.lg * d.h * d.r * d.r);
-    return t;
+    frequency = float(colorCount * 100) / float(d.lg * d.h * d.r * d.r);
+    return frequency;
 }
 
 // display colors of an image and their frequencies
-void displayColorFrequencies(imgT img, dms d)
+void displayColorFrequencies(Image image, Dimensions d)
 {
-    ptrPixelT m = getColors(img, d);
-    float max = getColorFrequency(img, d, *(m));
-    int indice_max = 0;
-    for (int i = 0; i < countDistinctColors(img, d); i++)
+    PixelPointer colors = getColors(image, d);
+    float maxFrequency = getColorFrequency(image, d, *(colors));
+    int dominantColorIndex = 0;
+    int distinctColorCount = countDistinctColors(image, d);
+    for (int i = 0; i < distinctColorCount; i++)
     {
-        printf("color%d : %u----------->%.2f %%\n\n", i, *(m + i), getColorFrequency(img, d, *(m + i)));
-        if (max < getColorFrequency(img, d, *(m + i)))
+        printf("color%d : %u----------->%.2f %%\n\n", i, *(colors + i), getColorFrequency(image, d, *(colors + i)));
+        if (maxFrequency < getColorFrequency(image, d, *(colors + i)))
         {
-            max = getColorFrequency(img, d, *(m + i));
-            indice_max = i;
+            maxFrequency = getColorFrequency(image, d, *(colors + i));
+            dominantColorIndex = i;
         }
     }
-    printf("\n\nThe dominant color is :%4u", *(m + indice_max));
+    printf("\n\nThe dominant color is :%4u", *(colors + dominantColorIndex));
 }
-void applyNegativeFilter(imgT neg /*destination*/, imgT img /*source*/, dms d)
+void applyNegativeFilter(Image negativeImage /*destination*/, Image originalImage /*source*/, Dimensions d)
 {
     for (int i = 0; i < d.r * d.h; i++)
         for (int j = 0; j < d.r * d.lg; j++)
         {
-            if (img[i][j] < 128)
-                neg[i][j] = 0;
+            if (originalImage[i][j] < 128)
+                negativeImage[i][j] = 0;
             else
-                neg[i][j] = 1;
+                negativeImage[i][j] = 1;
         }
 }
