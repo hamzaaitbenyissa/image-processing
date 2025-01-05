@@ -7,7 +7,7 @@ This project implements basic image processing functionalities in C.
 To compile the project, use the following command:
 
 ```bash
-gcc main.cpp -o image_processor.out
+gcc image_processing.cpp menu.cpp main.cpp -o image_processor.out
 ```
 
 ## Execution
