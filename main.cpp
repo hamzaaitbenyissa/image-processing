@@ -9,8 +9,8 @@
 int main()
 {
 	int choice;
-	dms d;
-	imgT img = NULL;
+	Dimensions d;
+	Image img = NULL;
 	int k = 0;
 
 	Menu();

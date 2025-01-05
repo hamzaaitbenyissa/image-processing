@@ -1,14 +1,14 @@
 #include "image_processing.h"
 
 // creates an image
-imgT createImage(dms d)
+Image createImage(Dimensions d)
 {
-    imgT img;
+    Image img;
     long C = d.lg * d.r; // number of columns
     long L = d.h * d.r;  // number of lines
-    img = (imgT)malloc(L * sizeof(ptrPixelT));
+    img = (Image)malloc(L * sizeof(PixelPointer));
     for (int i = 0; i < L; i++)
-        img[i] = (ptrPixelT)malloc(C * sizeof(pixelT));
+        img[i] = (PixelPointer)malloc(C * sizeof(Pixel));
     return img;
 }
 
@@ -24,7 +24,7 @@ void getImageDimensions(int *ptrL, int *ptrH, int *ptrR)
 }
 
 // initializes image pixels with random values
-void initImg(imgT im, dms d)
+void initImg(Image im, Dimensions d)
 {
     for (int i = 0; i < d.r * d.h; i++)
         for (int j = 0; j < d.r * d.lg; j++)
@@ -32,7 +32,7 @@ void initImg(imgT im, dms d)
 }
 
 // displays image
-void displayImage(imgT im, dms d)
+void displayImage(Image im, Dimensions d)
 {
     int L = d.h * d.r, C = d.lg * d.r;
 
@@ -62,7 +62,7 @@ void displayImage(imgT im, dms d)
 }
 
 // copies an image
-void copyImage(imgT cop, imgT org, dms d)
+void copyImage(Image cop, Image org, Dimensions d)
 {
     int L = d.h * d.r, C = d.lg * d.r;
     for (int i = 0; i < L; i++)
@@ -74,9 +74,9 @@ void copyImage(imgT cop, imgT org, dms d)
 
 // queue operations:
 
-void enqueue(filet *ptrF, coordt1 px)
+void enqueue(Queue *ptrF, Coordinate px)
 {
-    coordt *p = (coordt *)malloc(sizeof(coordt));
+    CoordinateNode *p = (CoordinateNode *)malloc(sizeof(CoordinateNode));
     p->x = px.x;
     p->y = px.y;
     p->suivant = NULL;
@@ -87,15 +87,15 @@ void enqueue(filet *ptrF, coordt1 px)
     ptrF->queue = p;
 }
 
-int isEmpty(filet f)
+int isEmpty(Queue f)
 {
     return f.queue == NULL;
 }
 
-coordt1 dequeue(filet *ptrF)
+Coordinate dequeue(Queue *ptrF)
 {
-    coordt1 c = {-1, -1}; // empty queue
-    coordt *s;
+    Coordinate c = {-1, -1}; // empty queue
+    CoordinateNode *s;
     if (ptrF->tete)
     {
         s = ptrF->tete;
@@ -114,7 +114,7 @@ coordt1 dequeue(filet *ptrF)
 //-------------------------------------image effects---------------------------------------------
 
 //-----------------------------------transpose an image----------------------------------
-void transposeImage(imgT imgtr /*destination*/, imgT img /*source*/, dms d)
+void transposeImage(Image imgtr /*destination*/, Image img /*source*/, Dimensions d)
 {
     for (int i = 0; i < d.h * d.r; i++)
         for (int j = 0; j < d.lg * d.r; j++)
@@ -122,38 +122,38 @@ void transposeImage(imgT imgtr /*destination*/, imgT img /*source*/, dms d)
 }
 
 // Horizontal mirror effect
-void horizontalMirror(imgT mir /*destination*/, imgT img /*source*/, dms d)
+void horizontalMirror(Image mir /*destination*/, Image img /*source*/, Dimensions d)
 {
     int L = d.h * d.r, C = d.lg * d.r;
     int i, ii;
     copyImage(mir, img, d);
     for (i = 0, ii = L - 1; i < ii; i++, ii--)
     {
-        ptrPixelT temp = img[i];
+        PixelPointer temp = img[i];
         mir[i] = mir[ii];
         mir[ii] = temp;
     }
 }
 
 // Vertical mirror effect
-void verticalMirror(imgT mir /*destination*/, imgT img /*source*/, dms d)
+void verticalMirror(Image mir /*destination*/, Image img /*source*/, Dimensions d)
 {
-    dms dt = {d.h, d.lg, d.r};
-    imgT img_temp1 = createImage(dt);
-    imgT img_temp2 = createImage(dt);
+    Dimensions dt = {d.h, d.lg, d.r};
+    Image img_temp1 = createImage(dt);
+    Image img_temp2 = createImage(dt);
     transposeImage(img_temp2, img, dt);
     horizontalMirror(img_temp1, img_temp2, dt);
     transposeImage(mir, img_temp1, d);
 }
 
 // fill the image
-void fillImage(imgT im /*destination*/, imgT img /*source*/, dms d, coordt1 px, pixelT cn)
+void fillImage(Image im /*destination*/, Image img /*source*/, Dimensions d, Coordinate px, Pixel cn)
 {
     copyImage(im, img, d);
-    filet f = {NULL, NULL}; // empty queue;
-    coordt1 px2, px1;
+    Queue f = {NULL, NULL}; // empty queue;
+    Coordinate px2, px1;
     enqueue(&f, px);
-    pixelT c0 = im[px.x][px.y];
+    Pixel c0 = im[px.x][px.y];
     while (!isEmpty(f))
     {
         px1 = dequeue(&f);
@@ -187,10 +187,10 @@ void fillImage(imgT im /*destination*/, imgT img /*source*/, dms d, coordt1 px, 
 
 //-----------------------------------sort an image----------------------------------
 // find the min of a line
-int findMinInRow(imgT M, dms d, int i0, int j0)
+int findMinInRow(Image M, Dimensions d, int i0, int j0)
 {
     int L = d.h * d.r, C = d.lg * d.r;
-    pixelT min = M[i0][j0];
+    Pixel min = M[i0][j0];
     int i, j, indice = i0;
     for (i = i0; i < L; i++)
     {
@@ -217,10 +217,10 @@ int findMinInRow(imgT M, dms d, int i0, int j0)
 }
 
 // find the min of a column
-int findMinInColumn(imgT M, dms d, int i0, int j0)
+int findMinInColumn(Image M, Dimensions d, int i0, int j0)
 {
     int L = d.h * d.r, C = d.lg * d.r;
-    pixelT min = M[i0][j0];
+    Pixel min = M[i0][j0];
     int i, j, indice = j0;
     for (i = i0; i < L; i++)
     {
@@ -247,16 +247,16 @@ int findMinInColumn(imgT M, dms d, int i0, int j0)
 }
 
 // swap two pixels
-void swapPixels(imgT M, int i0, int j0, int i1, int j1)
+void swapPixels(Image M, int i0, int j0, int i1, int j1)
 {
-    pixelT aux;
+    Pixel aux;
     aux = M[i0][j0];
     M[i0][j0] = M[i1][j1];
     M[i1][j1] = aux;
 }
 
 // sorting algorithm
-void sortImage(imgT M, dms d)
+void sortImage(Image M, Dimensions d)
 {
     int L = d.h * d.r, C = d.lg * d.r;
     int i, j;
@@ -267,9 +267,9 @@ void sortImage(imgT M, dms d)
 
 //------------------------------------dominant color-------------------------------
 // know the number of distinct colors in an image
-int countDistinctColors(imgT M, dms d)
+int countDistinctColors(Image M, Dimensions d)
 {
-    imgT MC = createImage(d);
+    Image MC = createImage(d);
     copyImage(MC, M, d);
     int L = d.h * d.r, C = d.lg * d.r;
     sortImage(MC, d);
@@ -286,11 +286,11 @@ int countDistinctColors(imgT M, dms d)
 }
 
 // get the colors of an image
-ptrPixelT getColors(imgT img, dms d)
+PixelPointer getColors(Image img, Dimensions d)
 {
     int L = d.h * d.r, C = d.lg * d.r;
-    ptrPixelT clr = (ptrPixelT)malloc(sizeof(pixelT) * countDistinctColors(img, d));
-    imgT MC = createImage(d);
+    PixelPointer clr = (PixelPointer)malloc(sizeof(Pixel) * countDistinctColors(img, d));
+    Image MC = createImage(d);
     copyImage(MC, img, d);
     sortImage(MC, d);
     int s = 1, i, j;
@@ -313,7 +313,7 @@ ptrPixelT getColors(imgT img, dms d)
 }
 
 // frequency of a color in an image
-float getColorFrequency(imgT img, dms d, pixelT c)
+float getColorFrequency(Image img, Dimensions d, Pixel c)
 {
     int s = 0;
     float t;
@@ -328,9 +328,9 @@ float getColorFrequency(imgT img, dms d, pixelT c)
 }
 
 // display colors of an image and their frequencies
-void displayColorFrequencies(imgT img, dms d)
+void displayColorFrequencies(Image img, Dimensions d)
 {
-    ptrPixelT m = getColors(img, d);
+    PixelPointer m = getColors(img, d);
     float max = getColorFrequency(img, d, *(m));
     int indice_max = 0;
     for (int i = 0; i < countDistinctColors(img, d); i++)
@@ -344,7 +344,7 @@ void displayColorFrequencies(imgT img, dms d)
     }
     printf("\n\nThe dominant color is :%4u", *(m + indice_max));
 }
-void applyNegativeFilter(imgT neg /*destination*/, imgT img /*source*/, dms d)
+void applyNegativeFilter(Image neg /*destination*/, Image img /*source*/, Dimensions d)
 {
     for (int i = 0; i < d.r * d.h; i++)
         for (int j = 0; j < d.r * d.lg; j++)

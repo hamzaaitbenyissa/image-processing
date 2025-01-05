@@ -5,57 +5,57 @@
 #include <stdlib.h>
 
 // Define types
-typedef unsigned char pixelT; // pixel color
-typedef pixelT *ptrPixelT;
-typedef ptrPixelT *imgT;
+typedef unsigned char Pixel; // pixel color
+typedef Pixel *PixelPointer;
+typedef PixelPointer *Image;
 typedef struct
 {
     int x, y;
-} coordt1;
+} Coordinate;
 typedef struct coordT
 {
     int x, y; // pixel coordinates
     struct coordT *suivant;
-} coordt;
+} CoordinateNode;
 
 typedef struct
 {
-    coordt *tete, *queue;
-} filet;
+    CoordinateNode *tete, *queue;
+} Queue;
 typedef struct
 {
     int lg;
     int h;
     int r;
-} dms;
+} Dimensions;
 
 // Function declarations for creating, initializing, displaying, and copying images
-imgT createImage(dms d);
+Image createImage(Dimensions d);
 void getImageDimensions(int *ptrL, int *ptrH, int *ptrR);
-void initImg(imgT im, dms d);
-void displayImage(imgT im, dms d);
-void copyImage(imgT cop, imgT org, dms d);
+void initImg(Image im, Dimensions d);
+void displayImage(Image im, Dimensions d);
+void copyImage(Image cop, Image org, Dimensions d);
 
 // Function declarations for image effects
-void transposeImage(imgT imgtr, imgT img, dms d);
-void horizontalMirror(imgT mir, imgT img, dms d);
-void verticalMirror(imgT mir, imgT img, dms d);
-void fillImage(imgT im, imgT img, dms d, coordt1 px, pixelT cn);
-void applyNegativeFilter(imgT neg, imgT img, dms d);
+void transposeImage(Image imgtr, Image img, Dimensions d);
+void horizontalMirror(Image mir, Image img, Dimensions d);
+void verticalMirror(Image mir, Image img, Dimensions d);
+void fillImage(Image im, Image img, Dimensions d, Coordinate px, Pixel cn);
+void applyNegativeFilter(Image neg, Image img, Dimensions d);
 
 // Function declarations for color frequency analysis and sorting
-int findMinInRow(imgT M, dms d, int i0, int j0);
-int findMinInColumn(imgT M, dms d, int i0, int j0);
-void swapPixels(imgT M, int i0, int j0, int i1, int j1);
-void sortImage(imgT M, dms d);
-int countDistinctColors(imgT M, dms d);
-ptrPixelT getColors(imgT img, dms d);
-float getColorFrequency(imgT img, dms d, pixelT c);
-void displayColorFrequencies(imgT img, dms d);
+int findMinInRow(Image M, Dimensions d, int i0, int j0);
+int findMinInColumn(Image M, Dimensions d, int i0, int j0);
+void swapPixels(Image M, int i0, int j0, int i1, int j1);
+void sortImage(Image M, Dimensions d);
+int countDistinctColors(Image M, Dimensions d);
+PixelPointer getColors(Image img, Dimensions d);
+float getColorFrequency(Image img, Dimensions d, Pixel c);
+void displayColorFrequencies(Image img, Dimensions d);
 
 // Function declarations for dynamic queue operations
-void enqueue(filet *ptrF, coordt1 px);
-int isEmpty(filet f);
-coordt1 dequeue(filet *ptrF);
+void enqueue(Queue *ptrF, Coordinate px);
+int isEmpty(Queue f);
+Coordinate dequeue(Queue *ptrF);
 
 #endif // IMAGE_PROCESSING_H

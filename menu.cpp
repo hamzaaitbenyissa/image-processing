@@ -35,11 +35,11 @@ int menu()
     return c;
 }
 
-void handleMenuChoice(int choice, imgT &img, dms &d, int &k)
+void handleMenuChoice(int choice, Image &img, Dimensions &d, int &k)
 {
-    coordt1 crd;
+    Coordinate crd;
     int cn;
-    imgT img_remplissage, img_miroir_V, img_miroir_H, img_negatif;
+    Image img_remplissage, img_miroir_V, img_miroir_H, img_negatif;
 
     switch (choice)
     {

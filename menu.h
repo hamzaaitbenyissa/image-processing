@@ -6,6 +6,6 @@
 // Function declarations for menu operations
 void Menu();
 int menu();
-void handleMenuChoice(int choice, imgT &img, dms &d, int &k);
+void handleMenuChoice(int choice, Image &img, Dimensions &d, int &k);
 
 #endif // MENU_H
